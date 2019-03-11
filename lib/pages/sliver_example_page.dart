@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class SliverExamplePage extends StatelessWidget {
   Widget _messageTile(bool isLeft) {
@@ -32,11 +33,6 @@ class SliverExamplePage extends StatelessWidget {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 20.0),
-          ),
-          RaisedButton(
-              onPressed: Navigator.of(context).pop, child: Text("Pop page"))
         ],
       ),
     );
@@ -65,6 +61,7 @@ class _SliverExampleBarDelegate extends SliverPersistentHeaderDelegate {
       end: TextStyle(
           letterSpacing: 1.0, fontWeight: FontWeight.bold, fontSize: 20.0));
   final Tween<double> _padding = Tween<double>(begin: 30.0, end: 5.0);
+  final Tween<double> _opacity = Tween<double>(begin: 1.0, end: 0.0);
 
   _SliverExampleBarDelegate(this.title);
 
@@ -77,22 +74,37 @@ class _SliverExampleBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    double progress = shrinkOffset / (maxExtent - minExtent);
+    double progress = (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1.0);
     TextStyle style = _textStyle.lerp(progress);
     double verticalPadding = _padding.lerp(progress);
+    double opacity = _opacity.lerp((progress * 3).clamp(0.0, 1.0));
+
+    Widget name = Padding(
+        padding:
+            EdgeInsets.symmetric(vertical: verticalPadding, horizontal: 20.0),
+        child: Center(
+          child: Text(
+            title,
+            style: style,
+            textAlign: TextAlign.center,
+          ),
+        ));
+
+    Widget closeButton = Opacity(
+      opacity: opacity,
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: RaisedButton(
+            onPressed: Navigator.of(context).pop, child: Text("Pop page")),
+      ),
+    );
 
     return Container(
       color: Colors.grey,
-      child: Padding(
-          padding:
-              EdgeInsets.symmetric(vertical: verticalPadding, horizontal: 20.0),
-          child: Center(
-            child: Text(
-              title,
-              style: style,
-              textAlign: TextAlign.center,
-            ),
-          )),
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: <Widget>[name, closeButton],
+      ),
     );
   }
 
