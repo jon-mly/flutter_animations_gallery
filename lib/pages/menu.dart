@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:animations_gallery/pages/back_page.dart';
+import 'package:animations_gallery/pages/hero_page.dart';
+import 'package:animations_gallery/pages/hero_squared_page.dart';
+import 'package:animations_gallery/pages/sliver_example_page.dart';
 import 'package:animations_gallery/transitions/zoom_in_from_below.dart';
 import 'package:animations_gallery/transitions/zoom_out_from_center.dart';
 import 'package:animations_gallery/transitions/multi_layer.dart';
@@ -18,6 +21,10 @@ class _MenuPageState extends State<MenuPage> {
     "Zoom out from center - Transition",
     "Multi layer page reveal - Transition",
     "Blurry fade in - Transition",
+    "Simple hero - Hero",
+    "Hero with shape change without tween - Hero",
+    "Hero with shape change with tween - Hero",
+    "Sliver scroll & animated header - Sliver"
   ];
 
   List<Function> _animationsFunctions;
@@ -34,6 +41,10 @@ class _MenuPageState extends State<MenuPage> {
       _presentZoomOutFromBelowPage,
       _presentMultiLayerPageRevealPage,
       _presentBlurryFadePage,
+      _presentHeroPage,
+      _presentHeroChangingShapeWithoutTweenPage,
+      _presentHeroChangingShapeWithTweenPage,
+      _presentSliverExample
     ];
     _animationsPositionedObjects = [
       Container(
@@ -47,6 +58,25 @@ class _MenuPageState extends State<MenuPage> {
       Container(),
       Container(),
       Container(),
+      Hero(
+        tag: "cirlce_hero",
+        child: Container(
+            decoration:
+                BoxDecoration(shape: BoxShape.circle, color: Colors.teal)),
+      ),
+      Hero(
+        tag: "cirlce_hero_to_rectangle",
+        child: Container(
+            decoration:
+                BoxDecoration(shape: BoxShape.circle, color: Colors.teal)),
+      ),
+      Hero(
+        tag: "cirlce_hero_to_rectangle_with_tween",
+        child: Container(
+            decoration:
+                BoxDecoration(shape: BoxShape.circle, color: Colors.teal)),
+      ),
+      Container()
     ];
   }
 
@@ -75,6 +105,26 @@ class _MenuPageState extends State<MenuPage> {
         originContainerRenderBox.localToGlobal(Offset.zero);
     Navigator.of(context)
         .push(CircleScaleUpRouteBuilder(BackPage(), size, absoluteOrigin));
+  }
+
+  void _presentHeroPage() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (BuildContext context) => HeroPage()));
+  }
+
+  void _presentHeroChangingShapeWithoutTweenPage() {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => HeroSquaredPage()));
+  }
+
+  void _presentHeroChangingShapeWithTweenPage() {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => HeroSquaredPage()));
+  }
+
+  void _presentSliverExample() {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => SliverExamplePage()));
   }
 
   @override
